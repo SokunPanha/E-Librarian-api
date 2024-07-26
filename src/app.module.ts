@@ -10,16 +10,20 @@ import { AuthModule } from './routes/auth/auth.module';
 import { AuthorService } from './routes/author/author.service';
 import { AuthorController } from './routes/author/author.controller';
 import { AuthorModule } from './routes/author/author.module';
+import { CategoryController } from './routes/category/category.controller';
+import { CategoryModule } from './routes/category/category.module';
+import { CategoryService } from './routes/category/category.service';
 configDotenv()
 @Module({
   imports: [
 MongooseModule.forRoot(process.env.DB_URI),
 UserModule,
 AuthModule,
-AuthorModule
+AuthorModule,
+CategoryModule
 ],
-  controllers: [AppController, AuthorController],
-  providers: [AppService, AuthorService],
+  controllers: [AppController, AuthorController, CategoryController],
+  providers: [AppService, AuthorService, CategoryService],
 })
 export class AppModule implements OnModuleInit {
   constructor(@InjectConnection() private readonly connection: Connection) {}
