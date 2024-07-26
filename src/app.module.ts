@@ -4,9 +4,9 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { InjectConnection } from '@nestjs/mongoose';
-import { UserModule } from './user/user.module';
+import { UserModule } from './routes/user/user.module';
 import { configDotenv } from 'dotenv';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './routes/auth/auth.module';
 configDotenv()
 @Module({
   imports: [
