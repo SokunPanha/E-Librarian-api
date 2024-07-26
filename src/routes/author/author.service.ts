@@ -6,10 +6,18 @@ import { Author } from 'src/model/author.schema';
 
 @Injectable()
 export class AuthorService {
-  constructor(@InjectModel(Author.name) private authorModel: Model<Author>) {}
+    constructor(@InjectModel(Author.name) private authorModel: Model<Author>) { }
 
-  async create(createAuthorDto: CreateAuthorDto): Promise<Author> {
-    const createdAuthor = new this.authorModel(createAuthorDto);
-    return createdAuthor.save();
-  }
+    create(createAuthorDto: CreateAuthorDto) {
+        const createdAuthor = new this.authorModel(createAuthorDto);
+        return createdAuthor.save();
+    }
+
+    getAllAuthor() {
+        return 'Get all authors';
+    }
+
+    getAuthorById(id: string) {
+        return `Get author by id: ${id}`;
+    }
 }
