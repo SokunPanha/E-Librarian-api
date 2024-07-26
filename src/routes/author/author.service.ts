@@ -20,4 +20,8 @@ export class AuthorService {
     getAuthorById(id: string) {
         return `Get author by id: ${id}`;
     }
+
+    updateAuthor(authorName: string) {
+        return `Update author: ${authorName} sucessfullly`;
+    }
 }
