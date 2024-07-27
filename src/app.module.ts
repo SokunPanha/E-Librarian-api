@@ -13,6 +13,9 @@ import { AuthorModule } from './routes/author/author.module';
 import { CategoryController } from './routes/category/category.controller';
 import { CategoryModule } from './routes/category/category.module';
 import { CategoryService } from './routes/category/category.service';
+import { LocationModule } from './routes/location/location.module';
+import { LocationController } from './routes/location/location.controller';
+import { LocationService } from './routes/location/location.service';
 configDotenv()
 @Module({
   imports: [
@@ -20,10 +23,11 @@ MongooseModule.forRoot(process.env.DB_URI),
 UserModule,
 AuthModule,
 AuthorModule,
-CategoryModule
+CategoryModule,
+LocationModule
 ],
-  controllers: [AppController, AuthorController, CategoryController],
-  providers: [AppService, AuthorService, CategoryService],
+  controllers: [AppController, AuthorController, CategoryController, LocationController],
+  providers: [AppService, AuthorService, CategoryService, LocationService],
 })
 export class AppModule implements OnModuleInit {
   constructor(@InjectConnection() private readonly connection: Connection) {}
