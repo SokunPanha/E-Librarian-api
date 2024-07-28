@@ -3,7 +3,8 @@ import { Document } from 'mongoose';
 
 
 @Schema()
-export class Author {
+export class Author extends Document {
+  
   @Prop()
   authorName: string
 }

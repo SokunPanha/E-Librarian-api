@@ -16,6 +16,7 @@ import { CategoryService } from './routes/category/category.service';
 import { LocationModule } from './routes/location/location.module';
 import { LocationController } from './routes/location/location.controller';
 import { LocationService } from './routes/location/location.service';
+import { BookModule } from './routes/book/book.module';
 configDotenv()
 @Module({
   imports: [
@@ -24,7 +25,8 @@ UserModule,
 AuthModule,
 AuthorModule,
 CategoryModule,
-LocationModule
+LocationModule,
+BookModule
 ],
   controllers: [AppController, AuthorController, CategoryController, LocationController],
   providers: [AppService, AuthorService, CategoryService, LocationService],

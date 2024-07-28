@@ -3,7 +3,8 @@ import { Document } from 'mongoose';
 
 
 @Schema()
-export class Location {
+export class Location extends Document {
+  
   @Prop()
   cabinet: string
   @Prop()
