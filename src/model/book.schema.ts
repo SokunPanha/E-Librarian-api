@@ -1,9 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Types } from 'mongoose';
-import { Author } from './author.schema';
-import { Category } from './category.schema';
-import { Location } from './location.schema';
+
 
 @Schema()
 export class Book extends Document {
@@ -21,13 +19,13 @@ export class Book extends Document {
   description: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Author' })
-  author: Author;
+  author: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Category' })
-  category: Category;
+  category: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Location' })
-  location: Location;
+  location: Types.ObjectId;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);
