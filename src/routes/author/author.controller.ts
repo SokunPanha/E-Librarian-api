@@ -28,7 +28,7 @@ export class AuthorController {
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    deleteOne(@Param('id') id: string) {
         return this.authorService.deleteAuthor(id);
     }
   
