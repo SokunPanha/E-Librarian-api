@@ -17,6 +17,8 @@ import { LocationModule } from './routes/location/location.module';
 import { LocationController } from './routes/location/location.controller';
 import { LocationService } from './routes/location/location.service';
 import { BookModule } from './routes/book/book.module';
+import { BookService } from './routes/book/book.service';
+import { BookController } from './routes/book/book.controller';
 configDotenv()
 @Module({
   imports: [
@@ -28,8 +30,8 @@ CategoryModule,
 LocationModule,
 BookModule
 ],
-  controllers: [AppController, AuthorController, CategoryController, LocationController],
-  providers: [AppService, AuthorService, CategoryService, LocationService],
+  controllers: [AppController, AuthorController, CategoryController, LocationController, BookController],
+  providers: [AppService, AuthorService, CategoryService, LocationService, BookService],
 })
 export class AppModule implements OnModuleInit {
   constructor(@InjectConnection() private readonly connection: Connection) {}
