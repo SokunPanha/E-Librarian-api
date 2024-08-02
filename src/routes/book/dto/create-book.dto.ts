@@ -1,8 +1,10 @@
 export class CreateBookDto {
-    code: string
+    bookCode: string
     title: string
     quantity: number
     description: string
+    imageUrl: string 
+    qrCodeUrl: string
     author: string
     location: string
     category: string

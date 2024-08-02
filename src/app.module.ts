@@ -19,34 +19,28 @@ import { LocationService } from './routes/location/location.service';
 import { BookModule } from './routes/book/book.module';
 import { BookService } from './routes/book/book.service';
 import { BookController } from './routes/book/book.controller';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './utilities/httpException.service';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 configDotenv()
 @Module({
   imports: [
+
 MongooseModule.forRoot(process.env.DB_URI),
 UserModule,
 AuthModule,
 AuthorModule,
 CategoryModule,
 LocationModule,
-BookModule
+BookModule,
+CloudinaryModule
 ],
   controllers: [AppController, AuthorController, CategoryController, LocationController, BookController],
-  providers: [AppService, AuthorService, CategoryService, LocationService, BookService],
+  providers: [AppService, AuthorService, CategoryService, LocationService, BookService, 
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter
+    }
+  ],
 })
-export class AppModule implements OnModuleInit {
-  constructor(@InjectConnection() private readonly connection: Connection) {}
-
-  async onModuleInit() {
-    this.connection.on('connected', () => {
-      Logger.log('MongoDB connection established successfully');
-    });
-
-    this.connection.on('error', (err) => {
-      Logger.error('MongoDB connection error: ', err);
-    });
-
-    this.connection.on('disconnected', () => {
-      Logger.warn('MongoDB connection disconnected');
-    });
-  }
-}
+export class AppModule  {}

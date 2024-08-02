@@ -1,21 +1,43 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { Location } from 'src/model/location.schema';
+import { JsonResponse } from 'src/utilities/JsonResponse';
 
 @Injectable()
 export class LocationService {
     constructor(@InjectModel(Location.name) private locationModel: Model<Location>) { }
 
-    async create(createLocationDto: CreateLocationDto): Promise<Location> {
-        const createdLocation = new this.locationModel(createLocationDto);
-        return createdLocation.save();
+    async create(createLocationDto: CreateLocationDto): Promise<JsonResponse<any>> {
+       try{
+        const {cabinet, shelve, drawer} = createLocationDto
+        const existingLocation = await this.locationModel.findOne({cabinet, shelve, drawer})
+        if (existingLocation) {
+            throw new BadRequestException('This location is already is existed!')
+        }
+
+        const createdLocation = new this.locationModel(createLocationDto)
+        const data = await  createdLocation.save();
+        if(data){
+            return new JsonResponse("Fetch successfully", HttpStatus.ACCEPTED, data)
+        } 
+
+       }catch(error){
+        throw new BadRequestException(error)
+       }
     }
 
-    async getAllLocation(): Promise<Location[]> {
-        return this.locationModel.find().exec();
+    async getAllLocation(): Promise<JsonResponse<any>> {
+        try{
+            const locations =  await this.locationModel.find().exec();
+            if(locations){
+                return new JsonResponse("Get all locations", HttpStatus.ACCEPTED, locations)
+            }
+        }catch(error){
+            throw new BadRequestException(error)
+        }
     }
 
     async getLocationById(id: string): Promise<Location> {
