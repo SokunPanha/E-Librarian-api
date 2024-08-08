@@ -4,9 +4,7 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { InjectConnection } from '@nestjs/mongoose';
-import { UserModule } from './routes/user/user.module';
 import { configDotenv } from 'dotenv';
-import { AuthModule } from './routes/auth/auth.module';
 import { AuthorService } from './routes/author/author.service';
 import { AuthorController } from './routes/author/author.controller';
 import { AuthorModule } from './routes/author/author.module';
@@ -22,18 +20,20 @@ import { BookController } from './routes/book/book.controller';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './utilities/httpException.service';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { UserModule } from './routes/user/user.module';
+import { AuthModule } from './routes/auth/auth.module';
 configDotenv()
 @Module({
   imports: [
 
 MongooseModule.forRoot(process.env.DB_URI),
-UserModule,
-AuthModule,
 AuthorModule,
 CategoryModule,
 LocationModule,
 BookModule,
-CloudinaryModule
+CloudinaryModule,
+UserModule,
+AuthModule
 ],
   controllers: [AppController, AuthorController, CategoryController, LocationController, BookController],
   providers: [AppService, AuthorService, CategoryService, LocationService, BookService, 
