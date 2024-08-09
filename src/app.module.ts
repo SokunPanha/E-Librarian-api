@@ -17,11 +17,12 @@ import { LocationService } from './routes/location/location.service';
 import { BookModule } from './routes/book/book.module';
 import { BookService } from './routes/book/book.service';
 import { BookController } from './routes/book/book.controller';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { HttpExceptionFilter } from './utilities/httpException.service';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { UserModule } from './routes/user/user.module';
 import { AuthModule } from './routes/auth/auth.module';
+import { RolesGuard } from './role/role.guard';
 configDotenv()
 @Module({
   imports: [
@@ -40,7 +41,11 @@ AuthModule
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter
-    }
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AppModule  {}
