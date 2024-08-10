@@ -11,11 +11,13 @@ import { Author } from 'src/model/author.schema';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { JsonResponse } from 'src/utilities/JsonResponse';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { Book } from 'src/model/book.schema';
 
 @Injectable()
 export class AuthorService {
   constructor(
     @InjectModel(Author.name) private authorModel: Model<Author & Document>,
+    @InjectModel('Book') private readonly bookModel: Model<Book>,
   ) {}
 
   async create(createAuthorDto: CreateAuthorDto): Promise<JsonResponse<any>> {
@@ -82,15 +84,29 @@ export class AuthorService {
 
   async deleteAuthor(id: string): Promise<JsonResponse<any>> {
     try {
-      const result = await this.authorModel.deleteOne({ _id: id }).exec();
+      // Ensure the ID is converted to ObjectId
+      const authorId = new Types.ObjectId(id); 
+
+      // Delete all books associated with the author
+      const deleteBooksResult = await this.bookModel.deleteMany({ author: authorId }).exec();
+
+      // Check if books were found
+      if (deleteBooksResult.deletedCount === 0) {
+        console.log(`No books were found with author ID ${id}`);
+      }
+
+      // Delete the author
+      const result = await this.authorModel.deleteOne({ _id: authorId }).exec();
       if (result.deletedCount === 0) {
         throw new NotFoundException(`Author with ID ${id} not found`);
       }
+
       return new JsonResponse('Deleted successfully', HttpStatus.ACCEPTED, {
-        deleteCount: result.deletedCount,
+        deletedAuthorCount: result.deletedCount,
+        deletedBooksCount: deleteBooksResult.deletedCount,
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new BadRequestException(error.message || 'An error occurred while deleting the author');
     }
   }
 }
