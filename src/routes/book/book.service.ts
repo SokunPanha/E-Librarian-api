@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Book } from 'src/model/book.schema';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { JsonResponse } from 'src/utilities/JsonResponse';
 
 @Injectable()
 export class BookService {
@@ -58,13 +59,30 @@ export class BookService {
         return this.bookModel.findById(id).populate('author category location').exec();
     }
 
-    updateBook(id: string, updateBookDto: UpdateBookDto) {
-        return `Update book: ${id} sucessfullly`;
+    async updateBook(id: string, updateBookDto: UpdateBookDto) {
+        try{
+            const updatedBook = await this.bookModel.findByIdAndUpdate(id, updateBookDto, { new: true }).exec();
+            if (!updatedBook) {
+              throw new NotFoundException(`Book with ID ${id} not found`);
+            }
+            return new JsonResponse("Updated Book successfully", HttpStatus.ACCEPTED, updatedBook)
+           }
+           catch(error){
+            throw new BadRequestException(error)
+           }
     }
 
-    deleteBook(id: string) {
-        return `Delete book: ${id} sucessfullly`;
-    }
+    async deleteBook(id: string): Promise<JsonResponse<any>> {
+        try{
+          const result = await this.bookModel.deleteOne({ _id: id }).exec();
+          if (result.deletedCount === 0) {
+            throw new NotFoundException(`Book with ID ${id} not found`);
+          }
+          return new JsonResponse("Book has been deleted!", HttpStatus.ACCEPTED, {deleteCount: result.deletedCount});
+        }catch(error){
+          throw new BadRequestException(error)
+        }
+      }
 
 
 }
