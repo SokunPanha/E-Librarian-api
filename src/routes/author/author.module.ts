@@ -9,7 +9,7 @@ import { BookModule } from '../book/book.module';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Author', schema: AuthorSchema }]),
-    BookModule, // Add BookModule here
+    BookModule,
   ],  providers: [AuthorService],
   controllers: [AuthorController],
   exports: [MongooseModule]
