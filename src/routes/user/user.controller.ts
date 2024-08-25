@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from 'src/role/role.decorator';
 import { Role } from 'src/role/role.enum';
 
+
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -37,7 +38,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id:string) {
+  deleteUser(@Param('id') id:string) { 
     return this.userService.deleteUser(id)
   }
 }

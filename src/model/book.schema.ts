@@ -22,6 +22,9 @@ export class Book extends Document {
   @Prop({required: true})
   imageUrl: string
 
+  @Prop()
+  publicId: string
+
   @Prop({})
   qrCodeUrl: string
 

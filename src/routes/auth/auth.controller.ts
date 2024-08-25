@@ -9,8 +9,9 @@ import {
   Req
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
+import { AuthDto } from './dto/authDto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,11 +19,11 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.email, signInDto.password);
+  // @UseGuards(AuthGuard("local"))
+  signIn(@Body() authDto: AuthDto) {
+    return this.authService.validateUser(authDto)
   }
 
-  @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Req() request: Request) {
     return request['user'];

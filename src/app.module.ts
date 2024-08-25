@@ -42,10 +42,10 @@ AuthModule
       provide: APP_FILTER,
       useClass: HttpExceptionFilter
     },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: RolesGuard,
+    // },
   ],
 })
 export class AppModule  {}

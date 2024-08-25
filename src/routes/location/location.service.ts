@@ -83,7 +83,7 @@ export class LocationService {
     return updatedLocation;
   }
 
-  async deleteLocation(id: string): Promise<JsonResponse<any>> {
+  async deleteLocation(id: string){
     try {
       const locationId = new Types.ObjectId(id);
 
@@ -102,10 +102,8 @@ export class LocationService {
         throw new NotFoundException(`Location with ID ${id} not found`);
       }
 
-      return new JsonResponse('Deleted successfully', HttpStatus.ACCEPTED, {
-        deletedlocationCount: result.deletedCount,
-        deletedBooksCount: deleteBooksResult.deletedCount,
-      });
+      return  { deletedCount: result.deletedCount}
+      
     } catch (error) {
       throw new BadRequestException(
         error.message || 'An error occurred while deleting the location',

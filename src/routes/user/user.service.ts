@@ -10,35 +10,34 @@ import { User } from 'src/model/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JsonResponse } from 'src/utilities/JsonResponse';
 import { UpdateUserDto } from './dto/update-user.dto';
-
+import { UserData } from './dto/data-user.dto';
+import * as bcrypt from "bcrypt"
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async create(createUserDto: CreateUserDto): Promise<JsonResponse<any>> {
+  async create(createUserDto: CreateUserDto) {
     try {
-      const { username } = createUserDto;
-      const existingUser = await this.userModel.findOne({ username }).exec();
+      const { password, email } = createUserDto;
+      const existingUser = await this.userModel.findOne({ email }).exec();
 
       if (existingUser) {
         throw new BadRequestException('This user is already existed!');
       }
 
-      const createdUser = new this.userModel(createUserDto);
+      const encryptPass =  await bcrypt.hash(password, 10)
+      const createdUser = new this.userModel({...createUserDto, password: encryptPass});
       const data = await createdUser.save();
+  
       if (data) {
-        return new JsonResponse(
-          'Fetch successfully',
-          HttpStatus.ACCEPTED,
-          data,
-        );
+        return data
       }
     } catch (error) {
       throw new BadRequestException(error);
     }
   }
 
-  async findUser(email: string): Promise<User> {
+  async findUser(email: string): Promise<UserData> {
     const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
       throw new NotFoundException('User not found');
@@ -99,4 +98,6 @@ export class UserService {
       throw new BadRequestException(error);
     }
   }
+
+  
 }

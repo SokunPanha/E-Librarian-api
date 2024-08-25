@@ -10,16 +10,16 @@ import { JsonResponse } from 'src/utilities/JsonResponse';
 export class BookService {
     constructor(@InjectModel(Book.name) private bookModel: Model<Book>) { }
 
-    async create(createBookDto: CreateBookDto){
-        const { author, category, location, title, bookCode, quantity, description, imageUrl, qrCodeUrl } = createBookDto;
+    async create(createBookDto: CreateBookDto): Promise<JsonResponse<any>>{
+        const { author, category, location, title, bookCode, quantity, description, imageUrl, qrCodeUrl, publicId } = createBookDto;
 
-        const exitingBook = await this.bookModel.findOne({title, author: new Types.ObjectId(author)})
+        const existingBook = await this.bookModel.findOne({title, author: new Types.ObjectId(author)})
 
         if (!Types.ObjectId.isValid(author) || !Types.ObjectId.isValid(category) || !Types.ObjectId.isValid(location)) {
             throw new BadRequestException('Invalid ObjectId');
         }
 
-        if (exitingBook) {
+        if (existingBook) {
             throw new BadRequestException('This book is already existed');
         }
 
@@ -30,6 +30,7 @@ export class BookService {
             quantity,
             description,
             imageUrl,
+            publicId,
             qrCodeUrl,
             author: new Types.ObjectId(author),
             category: new Types.ObjectId(category),
@@ -37,19 +38,22 @@ export class BookService {
         });
 
         const createdBook = newBook.save()
-        return {
-            message: "Book created successfully",
-            status: 201,
-            data: createdBook
-        }
+        return  new JsonResponse( "Book created successfully", HttpStatus.CREATED, createdBook)
+
        }
        catch(error){
         console.log(error.name)
        }
     }
 
-    async getAllBook(): Promise<Book[]> {
-        return this.bookModel.find().populate('author category location').exec();
+    async getAllBook(): Promise<JsonResponse<any>> {
+        try{
+
+            const books = await this.bookModel.find().populate('author category location').exec();
+            return new JsonResponse("get books", HttpStatus.ACCEPTED, books)
+        }catch{
+
+        }
     }
 
     async getBookById(id: string): Promise<Book> {
@@ -83,6 +87,7 @@ export class BookService {
           throw new BadRequestException(error)
         }
       }
-
-
 }
+
+
+

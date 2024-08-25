@@ -1,8 +1,7 @@
 import { IsEmail } from "@nestjs/class-validator";
 
 export class CreateUserDto {
-    username: string;
-    @IsEmail()
+    username: string
     email: string;
     password: string;
     role: string;

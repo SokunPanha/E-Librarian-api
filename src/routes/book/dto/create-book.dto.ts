@@ -4,6 +4,7 @@ export class CreateBookDto {
     quantity: number
     description: string
     imageUrl: string 
+    publicId: string
     qrCodeUrl: string
     author: string
     location: string

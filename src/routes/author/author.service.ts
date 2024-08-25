@@ -102,8 +102,7 @@ export class AuthorService {
       }
 
       return new JsonResponse('Deleted successfully', HttpStatus.ACCEPTED, {
-        deletedAuthorCount: result.deletedCount,
-        deletedBooksCount: deleteBooksResult.deletedCount,
+        deleteCount: result.deletedCount
       });
     } catch (error) {
       throw new BadRequestException(error.message || 'An error occurred while deleting the author');

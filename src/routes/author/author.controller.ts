@@ -1,7 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+import { Roles } from 'src/role/role.decorator';
+import { Role } from 'src/role/role.enum';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('author')
 export class AuthorController {
@@ -12,6 +16,7 @@ export class AuthorController {
       return this.authorService.create(createAuthorDto);
     }
 
+    @Roles(Role.USER)
     @Get()
     findAll() {
         return this.authorService.getAllAuthor();
